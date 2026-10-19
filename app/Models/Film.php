@@ -8,8 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Film extends Model
 {
     use HasFactory;
-    protected $table = 'films';
-    protected $fillable = ['title','sinopsis','year','poster','genre_id'];
 
-    
+    protected $fillable = [
+        'title',
+        'sinopsis',
+        'year',
+        'genre_id',
+        'poster',
+    ];
+
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class);
+    }
+
+    // Menggunakan nama 'pemeran' agar tidak bentrok dengan method bawaan Laravel 'casts()'
+    public function pemeran()
+    {
+        return $this->belongsToMany(Cast::class, 'film_cast', 'film_id', 'cast_id');
+    }
 }

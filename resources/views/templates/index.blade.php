@@ -14,7 +14,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!-- header -->
 @include('templates.component.header')
 <!-- //header -->
-<!-- bootstrap-pop-up -->
+<!-- bootstrap-pop-up (popup login) -->
 @include('templates.component.login')
 <!-- //bootstrap-pop-up -->
 <!-- nav -->
@@ -69,8 +69,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			$().UItoTop({ easingType: 'easeOutQuart' });
 			
 		});
-		@stack('script')
 		</script>
 <!-- //here ends scrolling icon -->
+@stack('scripts')
 </body>
 </html>

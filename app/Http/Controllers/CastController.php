@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cast;
-use App\Http\Requests\StoreCastRequest;
-use App\Http\Requests\UpdateCastRequest;
+use Illuminate\Http\Request;
 
 class CastController extends Controller
 {
@@ -13,7 +12,8 @@ class CastController extends Controller
      */
     public function index()
     {
-        //
+        $casts = Cast::all();
+        return view('admin.casts.index', compact('casts'));
     }
 
     /**
@@ -21,15 +21,23 @@ class CastController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.casts.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCastRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'umur' => 'required|integer',
+            'bio' => 'nullable|string',
+        ]);
+
+        Cast::create($request->all());
+
+        return redirect()->route('admin.cast.index')->with('success', 'Data cast berhasil ditambahkan!');
     }
 
     /**
@@ -37,7 +45,7 @@ class CastController extends Controller
      */
     public function show(Cast $cast)
     {
-        //
+        // Opsional jika ingin menampilkan detail cast
     }
 
     /**
@@ -45,15 +53,23 @@ class CastController extends Controller
      */
     public function edit(Cast $cast)
     {
-        //
+        return view('admin.casts.edit', compact('cast'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCastRequest $request, Cast $cast)
+    public function update(Request $request, Cast $cast)
     {
-        //
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'umur' => 'required|integer',
+            'bio' => 'nullable|string',
+        ]);
+
+        $cast->update($request->all());
+
+        return redirect()->route('admin.cast.index')->with('success', 'Data cast berhasil diperbarui!');
     }
 
     /**
@@ -61,6 +77,8 @@ class CastController extends Controller
      */
     public function destroy(Cast $cast)
     {
-        //
+        $cast->delete();
+
+        return redirect()->route('admin.cast.index')->with('success', 'Data cast berhasil dihapus!');
     }
 }

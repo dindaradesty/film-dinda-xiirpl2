@@ -20,7 +20,33 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'profile_id',
     ];
+
+    /**
+     * Relasi ke tabel roles.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Relasi ke tabel profiles.
+     */
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
+
+    /**
+     * Cek apakah user adalah admin (role_id = 2).
+     */
+    public function isAdmin(): bool
+    {
+        return (int) $this->role_id === 2;
+    }
 
     /**
      * The attributes that should be hidden for serialization.

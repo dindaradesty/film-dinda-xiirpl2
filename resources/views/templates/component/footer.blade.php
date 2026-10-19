@@ -5,7 +5,7 @@
         <div class="w3ls_footer_grid_left1">
           <h2>Subscribe to us</h2>
           <div class="w3ls_footer_grid_left1_pos">
-            <form action="#" method="post">
+            <form action="{{ route('home') }}" method="GET">
               <input type="email" name="email" placeholder="Your email..." required="">
               <input type="submit" value="Send">
             </form>
