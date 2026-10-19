@@ -124,6 +124,136 @@ class AuthFlowTest extends TestCase
             ->assertSessionHasErrors('password');
     }
 
+    public function test_film_form_shows_cast_name(): void
+    {
+        $admin = User::where('role_id', 2)->first();
+        $cast = \App\Models\Cast::first();
+
+        if (! $admin || ! $cast) {
+            $this->markTestSkipped('Butuh user admin dan data cast.');
+        }
+
+        $this->actingAs($admin)
+            ->get('/admin/film/create')
+            ->assertStatus(200)
+            ->assertSee($cast->name);
+
+        $film = \App\Models\Film::with('pemeran')->first();
+        if ($film) {
+            $this->actingAs($admin)
+                ->get('/admin/film/' . $film->id . '/edit')
+                ->assertStatus(200);
+        }
+    }
+
+    public function test_admin_can_create_cast(): void
+    {
+        $admin = User::where('role_id', 2)->first();
+        if (! $admin) {
+            $this->markTestSkipped('Butuh user admin.');
+        }
+
+        $name = 'Uji Cast ' . uniqid();
+
+        $this->actingAs($admin)->post('/admin/cast', [
+            'name' => $name,
+            'age' => 30,
+            'bio' => 'bio uji',
+        ])->assertRedirect('/admin/cast');
+
+        $cast = \App\Models\Cast::where('name', $name)->first();
+        $this->assertNotNull($cast);
+        $this->assertSame(30, (int) $cast->age);
+
+        $cast->delete();
+    }
+
+    public function test_admin_nav_has_genre_and_user_menus(): void
+    {
+        $admin = User::where('role_id', 2)->first();
+        if (! $admin) {
+            $this->markTestSkipped('Butuh user admin.');
+        }
+
+        $this->actingAs($admin)->get('/admin')
+            ->assertStatus(200)
+            ->assertSee('Kelola Genre')
+            ->assertSee('Kelola User');
+    }
+
+    public function test_admin_genre_pages_render_and_crud(): void
+    {
+        $admin = User::where('role_id', 2)->first();
+        if (! $admin) {
+            $this->markTestSkipped('Butuh user admin.');
+        }
+
+        $this->actingAs($admin)->get('/admin/genre')->assertStatus(200)->assertSee('Kelola Data Genre');
+        $this->actingAs($admin)->get('/admin/genre/create')->assertStatus(200);
+
+        $name = 'Genre Uji ' . uniqid();
+        $this->actingAs($admin)->post('/admin/genre', ['name' => $name])->assertRedirect('/admin/genre');
+
+        $genre = \App\Models\Genre::where('name', $name)->first();
+        $this->assertNotNull($genre);
+
+        $this->actingAs($admin)->get('/admin/genre/' . $genre->id . '/edit')->assertStatus(200);
+        $this->actingAs($admin)->put('/admin/genre/' . $genre->id, ['name' => $name . ' X'])
+            ->assertRedirect('/admin/genre');
+
+        $this->assertSame($name . ' X', $genre->fresh()->name);
+
+        $genre->delete();
+    }
+
+    public function test_genre_that_is_used_by_film_cannot_be_deleted(): void
+    {
+        $admin = User::where('role_id', 2)->first();
+        $film = \App\Models\Film::first();
+        if (! $admin || ! $film) {
+            $this->markTestSkipped('Butuh admin dan film.');
+        }
+
+        $genre = \App\Models\Genre::find($film->genre_id);
+        $this->assertNotNull($genre);
+
+        $this->actingAs($admin)->delete('/admin/genre/' . $genre->id)
+            ->assertRedirect('/admin/genre')
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('genres', ['id' => $genre->id]);
+    }
+
+    public function test_admin_user_list_and_delete(): void
+    {
+        $admin = User::where('role_id', 2)->first();
+        if (! $admin) {
+            $this->markTestSkipped('Butuh user admin.');
+        }
+
+        $this->actingAs($admin)->get('/admin/user')->assertStatus(200)->assertSee('Kelola Data User');
+
+        // Admin tidak boleh menghapus akunnya sendiri.
+        $this->actingAs($admin)->delete('/admin/user/' . $admin->id)
+            ->assertRedirect('/admin/user')
+            ->assertSessionHas('error');
+        $this->assertDatabaseHas('users', ['id' => $admin->id]);
+
+        // Admin bisa menghapus user biasa.
+        $profile = \App\Models\Profile::create(['umur' => 0, 'bio' => '-', 'alamat' => '-']);
+        $user = User::create([
+            'name' => 'User Hapus',
+            'email' => 'hapus' . uniqid() . '@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('secret'),
+            'role_id' => 1,
+            'profile_id' => $profile->id,
+        ]);
+
+        $this->actingAs($admin)->delete('/admin/user/' . $user->id)->assertRedirect('/admin/user');
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertDatabaseMissing('profiles', ['id' => $profile->id]);
+    }
+
     public function test_logout(): void
     {
         $admin = User::where('role_id', 2)->first();

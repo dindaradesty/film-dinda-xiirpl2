@@ -29,13 +29,13 @@ class CastController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'umur' => 'required|integer',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer',
             'bio' => 'nullable|string',
         ]);
 
-        Cast::create($request->all());
+        Cast::create($validated);
 
         return redirect()->route('admin.cast.index')->with('success', 'Data cast berhasil ditambahkan!');
     }
@@ -61,13 +61,13 @@ class CastController extends Controller
      */
     public function update(Request $request, Cast $cast)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'umur' => 'required|integer',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer',
             'bio' => 'nullable|string',
         ]);
 
-        $cast->update($request->all());
+        $cast->update($validated);
 
         return redirect()->route('admin.cast.index')->with('success', 'Data cast berhasil diperbarui!');
     }

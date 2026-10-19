@@ -30,8 +30,8 @@
                     @forelse ($casts as $index => $cast)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td><strong>{{ $cast->nama }}</strong></td>
-                            <td>{{ $cast->umur }} Tahun</td>
+                            <td><strong>{{ $cast->name }}</strong></td>
+                            <td>{{ $cast->age }} Tahun</td>
                             <td>{{ Str::limit($cast->bio, 60) }}</td>
                             <td>
                                 <a href="{{ route('admin.cast.edit', $cast->id) }}" class="btn btn-sm btn-orange">Edit</a>

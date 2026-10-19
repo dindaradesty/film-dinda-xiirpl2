@@ -19,5 +19,7 @@
     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
     <a href="{{ route('admin.film.index') }}" class="{{ request()->routeIs('admin.film.*') ? 'active' : '' }}">Kelola Film</a>
     <a href="{{ route('admin.cast.index') }}" class="{{ request()->routeIs('admin.cast.*') ? 'active' : '' }}">Kelola Cast</a>
+    <a href="{{ route('admin.genre.index') }}" class="{{ request()->routeIs('admin.genre.*') ? 'active' : '' }}">Kelola Genre</a>
+    <a href="{{ route('admin.user.index') }}" class="{{ request()->routeIs('admin.user.*') ? 'active' : '' }}">Kelola User</a>
     <a href="{{ route('home') }}">Lihat Situs &raquo;</a>
 </div>

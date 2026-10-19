@@ -23,13 +23,13 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="nama">Nama Cast</label>
-                        <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama') }}" required>
+                        <label for="name">Nama Cast</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="umur">Umur</label>
-                        <input type="number" class="form-control" id="umur" name="umur" value="{{ old('umur') }}" required>
+                        <label for="age">Umur</label>
+                        <input type="number" class="form-control" id="age" name="age" value="{{ old('age') }}" required>
                     </div>
 
                     <div class="form-group">

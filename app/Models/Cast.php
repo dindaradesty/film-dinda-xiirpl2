@@ -9,9 +9,10 @@ class Cast extends Model
 {
     use HasFactory;
 
+    // Sesuai kolom tabel `casts`: name, age, bio
     protected $fillable = [
-        'nama',
-        'umur',
+        'name',
+        'age',
         'bio',
     ];
 

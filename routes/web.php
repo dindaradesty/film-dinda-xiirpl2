@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     FilmController,
     CastController,
+    GenreController,
+    UserController,
     AuthController,
     DashboardController,
 };
@@ -46,4 +48,6 @@ Route::middleware(['auth', 'role:2'])->prefix('admin')->name('admin.')->group(fu
 
     Route::resource('film', FilmController::class)->except(['show']);
     Route::resource('cast', CastController::class)->except(['show']);
+    Route::resource('genre', GenreController::class)->except(['show']);
+    Route::resource('user', UserController::class)->only(['index', 'destroy']);
 });

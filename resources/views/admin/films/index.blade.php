@@ -44,7 +44,7 @@
                             <td><span class="label label-warning">{{ $film->genre->name ?? 'Tanpa Genre' }}</span></td>
                             <td>
                                 @forelse ($film->pemeran as $cast)
-                                    <span class="label label-default" style="display: inline-block; margin-bottom: 3px;">{{ $cast->nama }}</span>
+                                    <span class="label label-default" style="display: inline-block; margin-bottom: 3px;">{{ $cast->name }}</span>
                                 @empty
                                     <span style="color: #999;">Belum ada cast</span>
                                 @endforelse

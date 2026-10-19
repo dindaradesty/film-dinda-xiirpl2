@@ -61,7 +61,7 @@
                                 <label style="display: block; margin-bottom: 5px; font-weight: 400;">
                                     <input type="checkbox" name="casts[]" value="{{ $cast->id }}"
                                         {{ is_array(old('casts')) && in_array($cast->id, old('casts')) ? 'checked' : '' }}>
-                                    {{ $cast->nama }} ({{ $cast->umur }} Thn)
+                                    {{ $cast->name }} ({{ $cast->age }} Thn)
                                 </label>
                             @empty
                                 <span style="color: #999;">Belum ada data cast. Silakan tambah data cast terlebih dahulu.</span>

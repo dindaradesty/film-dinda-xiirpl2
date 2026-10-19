@@ -19,8 +19,8 @@
         $cards = [
             ['label' => 'Total Film', 'value' => $stats['films'], 'link' => route('admin.film.index')],
             ['label' => 'Total Cast', 'value' => $stats['casts'], 'link' => route('admin.cast.index')],
-            ['label' => 'Total Genre', 'value' => $stats['genres'], 'link' => route('movies')],
-            ['label' => 'Total User', 'value' => $stats['users'], 'link' => null],
+            ['label' => 'Total Genre', 'value' => $stats['genres'], 'link' => route('admin.genre.index')],
+            ['label' => 'Total User', 'value' => $stats['users'], 'link' => route('admin.user.index')],
         ];
     @endphp
 
