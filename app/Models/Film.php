@@ -27,4 +27,12 @@ class Film extends Model
     {
         return $this->belongsToMany(Cast::class, 'film_cast', 'film_id', 'cast_id');
     }
+
+    /**
+     * Relasi ke tabel kritiks (komentar/ulasan film).
+     */
+    public function kritiks()
+    {
+        return $this->hasMany(Kritik::class, 'film_id');
+    }
 }

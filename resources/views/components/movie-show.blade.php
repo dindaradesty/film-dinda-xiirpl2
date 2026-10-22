@@ -131,7 +131,7 @@
           <div class="media-grids">
             @foreach ($comments as $comment)
               <div class="media">
-                <h5>{{ $comment->user_id }}</h5>
+                <h5>{{ $comment->user->name ?? 'User Anonim' }}</h5>
                 <div class="media-left">
                   <a href="#">
                     <img src="{{ asset('storage/images/user.jpg') }}" title="One movies" alt=" " />

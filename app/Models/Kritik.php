@@ -17,4 +17,20 @@ class Kritik extends Model
         'film_id',
         'user_id',
     ];
+
+    /**
+     * Relasi ke tabel users (pemilik komentar/ulasan).
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relasi ke tabel films.
+     */
+    public function film()
+    {
+        return $this->belongsTo(Film::class, 'film_id');
+    }
 }
