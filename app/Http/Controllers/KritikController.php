@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Film;
 use App\Models\Kritik;
-use App\Http\Requests\StoreKritikRequest;
-use App\Http\Requests\UpdateKritikRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KritikController extends Controller
 {
@@ -25,11 +26,29 @@ class KritikController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Simpan komentar/ulasan baru untuk sebuah film.
+     * user_id diambil otomatis dari user yang sedang login.
      */
-    public function store(StoreKritikRequest $request)
+    public function store(Request $request, Film $film)
     {
-        //
+        $data = $request->validate([
+            'comment' => ['required', 'string', 'min:3', 'max:2000'],
+        ], [
+            'comment.required' => 'Komentar/ulasan wajib diisi.',
+            'comment.min' => 'Komentar/ulasan minimal 3 karakter.',
+            'comment.max' => 'Komentar/ulasan maksimal 2000 karakter.',
+        ]);
+
+        $film->kritiks()->create([
+            'user_id' => Auth::id(),
+            'comment' => $data['comment'],
+            // Kolom rating di tabel kritiks wajib diisi, form ini tidak
+            // meminta rating sehingga default-nya 0.
+            'rating' => 0,
+        ]);
+
+        return back()->withFragment('comments')
+            ->with('success', 'Komentar/ulasan berhasil ditambahkan.');
     }
 
     /**
@@ -51,7 +70,7 @@ class KritikController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateKritikRequest $request, Kritik $kritik)
+    public function update(Request $request, Kritik $kritik)
     {
         //
     }

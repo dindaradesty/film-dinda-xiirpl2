@@ -129,8 +129,8 @@
     $(function () {
       activateAuthForm('{{ $showRegister ? 'register' : 'login' }}');
 
-      @if ($errors->any() && ! request()->routeIs('login') && ! request()->routeIs('register'))
-        // Jika ada error validasi dari modal, buka lagi modalnya.
+      @if (($errors->has('email') || $errors->has('password') || $errors->has('name') || $errors->has('password_confirmation')) && ! request()->routeIs('login') && ! request()->routeIs('register'))
+        // Jika ada error validasi dari modal login/register, buka lagi modalnya.
         $('#myModal').modal('show');
       @endif
     });

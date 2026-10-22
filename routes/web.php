@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     UserController,
     AuthController,
     DashboardController,
+    KritikController,
 };
 
 /*
@@ -37,6 +38,11 @@ Route::get('/', [FilmController::class, 'movieHome'])->name('home');
 Route::get('/movies', [FilmController::class, 'movies'])->name('movies');
 Route::get('/movies/genre/{genre}', [FilmController::class, 'moviesByGenre'])->name('genre');
 Route::get('/movies/{film}', [FilmController::class, 'show'])->name('movies.show');
+
+// Kirim komentar/ulasan (wajib login).
+Route::post('/movies/{film}/comments', [KritikController::class, 'store'])
+    ->middleware('auth')
+    ->name('movies.comments.store');
 
 /*
 |--------------------------------------------------------------------------

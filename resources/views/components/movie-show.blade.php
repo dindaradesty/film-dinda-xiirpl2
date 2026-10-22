@@ -3,6 +3,54 @@
 @push('style')
   <link rel="stylesheet" type="text/css" href="{{ asset('template/list-css/table-style.css') }}" />
   <link rel="stylesheet" type="text/css" href="{{ asset('template/list-css/basictable.css') }}" />
+  <style>
+    .comment-login-notice {
+      border: 1px dashed #ff8d1b;
+      background: #fff8f0;
+      padding: 18px 20px;
+      text-align: center;
+    }
+    .comment-login-notice p {
+      margin: 0 0 12px 0;
+      color: #757575;
+      font-size: 14px;
+    }
+    .comment-login-notice .btn-comment-login {
+      display: inline-block;
+      background: #ff8d1b;
+      color: #fff;
+      padding: 8px 24px;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: bold;
+      text-decoration: none;
+      transition: .3s;
+    }
+    .comment-login-notice .btn-comment-login:hover {
+      background: #222;
+      color: #fff;
+    }
+    .all-comments .comment-alert {
+      margin: 1em 0;
+      font-size: 14px;
+    }
+    .all-comments .comment-error {
+      color: #c0392b;
+      font-size: 13px;
+      margin: -6px 0 10px 0;
+    }
+    .all-comments .media .comment-date {
+      display: block;
+      color: #b5b5b5;
+      font-size: 12px;
+      margin: -14px 0 14px 0;
+    }
+    .all-comments .no-comment {
+      color: #9E9E9E;
+      font-size: 14px;
+      margin-top: 1em;
+    }
+  </style>
 @endpush
 
 @push('scripts')
@@ -114,24 +162,40 @@
           </div>
         </div>
         <div class="clearfix"> </div>
-        <div class="all-comments">
+        <div class="all-comments" id="comments">
           <div class="all-comments-info">
             <a href="#">Comments</a>
-            <div class="agile-info-wthree-box">
-              <form>
-                <input type="text" placeholder="Name" required="">			           					   
-                <input type="text" placeholder="Email" required="">
-                <input type="text" placeholder="Phone" required="">
-                <textarea placeholder="Message" required=""></textarea>
-                <input type="submit" value="SEND">
-                <div class="clearfix"> </div>
-              </form>
-            </div>
+
+            @if (session('success'))
+              <div class="alert alert-success comment-alert">{{ session('success') }}</div>
+            @endif
+
+            @auth
+              <div class="agile-info-wthree-box">
+                <form action="{{ route('movies.comments.store', $film->id) }}" method="POST">
+                  @csrf
+                  <textarea name="comment" placeholder="Tulis komentar/ulasan Anda..." required minlength="3" maxlength="2000">{{ old('comment') }}</textarea>
+                  @error('comment')
+                    <p class="comment-error">{{ $message }}</p>
+                  @enderror
+                  <input type="submit" value="SEND">
+                  <div class="clearfix"> </div>
+                </form>
+              </div>
+            @else
+              <div class="agile-info-wthree-box comment-login-notice">
+                <p>Silakan Login terlebih dahulu untuk memberikan komentar/ulasan.</p>
+                <a href="#" class="btn-comment-login" data-toggle="modal" data-target="#myModal">Login</a>
+              </div>
+            @endauth
           </div>
           <div class="media-grids">
-            @foreach ($comments as $comment)
+            @forelse ($comments as $comment)
               <div class="media">
                 <h5>{{ $comment->user->name ?? 'User Anonim' }}</h5>
+                <span class="comment-date">
+                  {{ $comment->created_at ? $comment->created_at->format('d M Y, H:i') : '' }}
+                </span>
                 <div class="media-left">
                   <a href="#">
                     <img src="{{ asset('storage/images/user.jpg') }}" title="One movies" alt=" " />
@@ -141,7 +205,9 @@
                   <p>{{ $comment->comment }}</p>
                 </div>
               </div>
-            @endforeach
+            @empty
+              <p class="no-comment">Belum ada komentar/ulasan untuk film ini.</p>
+            @endforelse
           </div>
         </div>
       </div>

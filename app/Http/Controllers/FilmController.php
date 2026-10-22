@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Film;
 use App\Models\Genre;
 use App\Models\Cast;
-use App\Models\Kritik;
 use App\Models\Peran;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -77,11 +76,10 @@ class FilmController extends Controller
             ->orderBy('created_at', 'asc')
             ->limit(9)
             ->get();
-        $comments = Kritik::with('user')
-            ->select('comment', 'user_id')
-            ->where('film_id', '=', $film->id)
-            ->orderBy('created_at', 'asc')
-            ->limit(10)
+        $comments = $film->kritiks()
+            ->with('user')
+            ->latest()
+            ->limit(50)
             ->get();
         $perans = Peran::with('cast')->where('film_id', '=', $film->id)->get();
 
