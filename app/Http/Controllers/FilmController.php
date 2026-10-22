@@ -82,7 +82,7 @@ class FilmController extends Controller
             ->orderBy('created_at', 'asc')
             ->limit(10)
             ->get();
-        $perans = Peran::where('film_id', '=', $film->id)->get();
+        $perans = Peran::with('cast')->where('film_id', '=', $film->id)->get();
 
         return view('components.movie-show', compact('film', 'filmByGenre', 'filmByRelease', 'comments', 'perans'));
     }

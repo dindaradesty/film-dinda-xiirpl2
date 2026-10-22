@@ -254,6 +254,19 @@ class AuthFlowTest extends TestCase
         $this->assertDatabaseMissing('profiles', ['id' => $profile->id]);
     }
 
+    public function test_movie_detail_shows_cast_name_instead_of_id(): void
+    {
+        $peran = \App\Models\Peran::with('cast')->whereNotNull('cast_id')->first();
+
+        if (! $peran || ! $peran->cast) {
+            $this->markTestSkipped('Butuh data peran/cast.');
+        }
+
+        $this->get('/movies/' . $peran->film_id)
+            ->assertStatus(200)
+            ->assertSee($peran->cast->name);
+    }
+
     public function test_logout(): void
     {
         $admin = User::where('role_id', 2)->first();
